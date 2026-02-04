@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>一人公司救星- 不睡覺 AI 客服實戰班</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+
+  <script>
+    // ==========================================
+    // 設定區：請將這裡換成你部署後的 GAS 網址
+    // ==========================================
+    const GAS_API_URL = 'https://script.google.com/macros/s/AKfycby2yxvhciR6ray1UAtuRjjTq-J5G4greAhQKyLVjYm_aE3bqDhvpONJK1C5Sbec4cj-/exec'; 
+
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans TC"', 'sans-serif'],
+            rounded: ['"Zen Maru Gothic"', 'sans-serif'],
+          },
+          colors: {
+            'brand-yellow': '#FCD34D',
+            'brand-cream': '#FFFBEB',
+            'brand-dark': '#2D3748',
+            'brand-blue': '#4B88A2',
+            'alert-red': '#E53E3E',
+          },
+          boxShadow: {
+            'card': '0 10px 30px -5px rgba(0, 0, 0, 0.05)',
+            'float': '0 20px 40px -10px rgba(252, 211, 77, 0.3)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    ::-webkit-scrollbar { width: 0px; background: transparent; }
+    .loader {
+      border: 3px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 3px solid #2D3748;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    input, select, textarea { -webkit-appearance: none; appearance: none; }
+  </style>
+</head>
+<body class="bg-brand-cream text-brand-dark font-sans antialiased selection:bg-brand-yellow selection:text-brand-dark">
+
+  <main class="max-w-2xl mx-auto min-h-screen bg-white shadow-2xl shadow-gray-100/50 overflow-hidden relative">
+    
+    <div class="h-2 bg-brand-yellow w-full"></div>
+
+    <header class="pt-12 pb-10 px-6 text-center relative z-10">
+      <div class="mx-auto w-32 h-32 mb-6 rounded-full border-4 border-white shadow-card overflow-hidden bg-brand-yellow flex items-center justify-center transform hover:scale-105 transition duration-500">
+        <img src="https://i.meee.com.tw/5ZnmWeT.png" alt="把家搬好 Logo" class="w-full h-full object-cover">
+      </div>
+      <h2 class="text-brand-blue font-bold tracking-widest text-xs uppercase mb-3">老闆與業務的必修課</h2>
+      <h1 class="text-3xl md:text-4xl font-rounded font-bold leading-tight mb-4 text-gray-800">
+        6 小時打造你的<br>
+        <span class="relative inline-block mt-1">
+          <span class="relative z-10">24H 金牌客服助理</span>
+          <span class="absolute bottom-1 left-0 w-full h-3 bg-brand-yellow/50 -z-0 rounded-sm"></span>
+        </span>
+      </h1>
+      <p class="text-gray-500 text-sm md:text-base leading-relaxed mb-8 px-4">
+        免租主機 x 視覺辨識 x 自動接單<br>讓 Google Gemini 幫你搞定瑣碎客服
+      </p>
+    </header>
+
+    <section id="register" class="pb-20 px-6">
+      <div class="bg-white rounded-[2rem] shadow-xl p-8 border border-gray-100">
+        <h2 class="font-rounded font-bold text-2xl text-center mb-6">填寫報名表</h2>
+        
+        <form id="regForm" onsubmit="handleFormSubmit(event)" class="space-y-5">
+          
+          <div>
+            <label class="block text-xs font-bold text-gray-400 mb-1 ml-1">姓名</label>
+            <input type="text" name="name" required class="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-brand-dark focus:ring-2 focus:ring-brand-yellow placeholder-gray-300 transition-all">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-400 mb-1 ml-1">手機</label>
+            <input type="tel" name="mobile" required pattern="09\d{8}" class="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-brand-dark focus:ring-2 focus:ring-brand-yellow placeholder-gray-300 transition-all">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-400 mb-1 ml-1">Email</label>
+            <input type="email" name="email" required class="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-brand-dark focus:ring-2 focus:ring-brand-yellow placeholder-gray-300 transition-all">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-400 mb-1 ml-1">選擇上課日期</label>
+            <div class="relative">
+              <select name="courseDate" required class="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-brand-dark focus:ring-2 focus:ring-brand-yellow appearance-none">
+                <option value="" disabled selected>請選擇場次...</option>
+                <option value="2026/02/07(六)">2026/02/07(六)</option>
+                <option value="2026/03/07(六)">2026/03/07(六)</option>
+                <option value="2026/03/21(六)">2026/03/21(六)</option>
+                <option value="2026/04/18(六)">2026/04/18(六)</option>
+              </select>
+              <i class="fas fa-chevron-down absolute right-4 top-3.5 text-gray-400 text-xs"></i>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-400 mb-1 ml-1">您的行業別</label>
+            <div class="relative">
+              <select name="industry" required class="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-brand-dark focus:ring-2 focus:ring-brand-yellow appearance-none">
+                <option value="" disabled selected>請選擇...</option>
+                <option value="零售電商/團購">零售電商/團購/選物</option>
+                <option value="課程講師/顧問">課程講師/顧問</option>
+                <option value="保險/房仲/業務">保險/房仲/業務</option>
+                <option value="專業技術/維修">專業技術/維修/工程</option>
+                <option value="實體店面/餐飲">實體店面/餐飲</option>
+                <option value="其他">其他</option>
+              </select>
+              <i class="fas fa-chevron-down absolute right-4 top-3.5 text-gray-400 text-xs"></i>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-400 mb-1 ml-1">統編 (選填)</label>
+            <input type="text" name="taxId" class="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-brand-dark focus:ring-2 focus:ring-brand-yellow placeholder-gray-300 transition-all">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-400 mb-1 ml-1">想解決的問題 / 備註</label>
+            <textarea name="notes" rows="2" class="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-brand-dark focus:ring-2 focus:ring-brand-yellow placeholder-gray-300 transition-all"></textarea>
+          </div>
+
+          <div class="bg-yellow-50 p-4 rounded-2xl border border-brand-yellow/30">
+            <label class="flex items-start gap-3 cursor-pointer">
+              <div class="relative flex items-center pt-1">
+                <input type="checkbox" id="g1_check" required class="peer h-5 w-5 cursor-pointer appearance-none rounded-md border-2 border-brand-yellow transition-all checked:bg-brand-yellow checked:border-brand-yellow">
+                <i class="fas fa-check absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[40%] text-white text-xs opacity-0 peer-checked:opacity-100 pt-1"></i>
+              </div>
+              <span class="text-sm text-gray-700 leading-tight">
+                我已確認擁有或將升級 <span class="font-bold text-black bg-yellow-200 px-1 rounded">Google One (付費版)</span> 帳號。
+              </span>
+            </label>
+          </div>
+
+          <button type="submit" id="submitBtn" class="w-full bg-brand-dark text-white font-bold text-lg py-4 rounded-2xl shadow-lg transform active:scale-95 transition-all duration-200 flex justify-center items-center gap-2">
+            <span id="btnText">確認資料並付款</span>
+            <span id="btnSubText" class="text-brand-yellow text-sm font-normal">(NT$ 3,000)</span>
+            <div id="loadingSpinner" class="hidden ml-2">
+              <div class="loader"></div>
+            </div>
+          </button>
+          
+          <div class="text-center">
+             <span class="text-[10px] text-gray-400 uppercase tracking-widest">Secured by PayUni</span>
+          </div>
+
+        </form>
+      </div>
+    </section>
+
+    <footer class="text-center pb-8 text-gray-400 text-xs">
+      <p>&copy; 2026 把家搬好 Moving Better.</p>
+    </footer>
+
+  </main>
+
+  <script>
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      
+      const form = e.target;
+      const btn = document.getElementById('submitBtn');
+      const btnText = document.getElementById('btnText');
+      const btnSubText = document.getElementById('btnSubText');
+      const spinner = document.getElementById('loadingSpinner');
+      const g1Check = document.getElementById('g1_check');
+
+      // 1. 檢查 Google One 勾選
+      if (!g1Check.checked) {
+        alert('請確認 Google One 需求，這是課程順利進行的關鍵。');
+        return;
+      }
+
+      // 2. 準備傳送資料 (JSON 格式)
+      const formData = {
+        name: form.name.value,
+        mobile: form.mobile.value,
+        email: form.email.value,
+        courseDate: form.courseDate.value, 
+        industry: form.industry.value,
+        taxId: form.taxId.value,
+        notes: form.notes.value,
+        googleOne: "Yes"
+      };
+
+      // 3. UI 狀態更新 (Loading)
+      btn.disabled = true;
+      btn.classList.add('opacity-80', 'cursor-not-allowed');
+      btnText.innerText = '正在建立訂單...';
+      btnSubText.innerText = '';
+      spinner.classList.remove('hidden');
+
+      // 4. 使用 fetch 呼叫 GAS 後端
+      // 注意：mode 'no-cors' 會導致無法讀取 response，但為了跨域最簡單相容性，標準 fetch 預設即可
+      // Google Apps Script 的 fetch 需要使用 "text/plain" 發送 JSON 才能避免 OPTIONS 預檢錯誤，
+      // 或是單純接受 postData.contents 解析。
+      fetch(GAS_API_URL, {
+        method: "POST",
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json()) // 解析後端回傳的 JSON
+      .then(data => {
+        if (data.status === 'success') {
+          // --- 成功：變更按鈕樣式引導付款 ---
+          spinner.classList.add('hidden');
+          
+          btn.classList.remove('opacity-80', 'cursor-not-allowed', 'bg-brand-dark');
+          btn.classList.add('bg-alert-red', 'animate-pulse');
+          btn.disabled = false;
+          
+          btnText.innerText = '訂單成立！請點此前往付款';
+          btnSubText.innerText = '(開啟新視窗)';
+          
+          // 替換按鈕行為：點擊跳轉 PayUni
+          const newBtn = btn.cloneNode(true);
+          btn.parentNode.replaceChild(newBtn, btn);
+          
+          newBtn.addEventListener('click', function(ev) {
+              ev.preventDefault();
+              window.open(data.paymentUrl, '_blank');
+          });
+
+        } else {
+          throw new Error(data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('發生錯誤：' + error.message + '\n請稍後再試或是聯繫客服。');
+        resetBtn();
+      });
+    }
+
+    function resetBtn() {
+      const btn = document.getElementById('submitBtn');
+      const btnText = document.getElementById('btnText');
+      const btnSubText = document.getElementById('btnSubText');
+      const spinner = document.getElementById('loadingSpinner');
+      
+      btn.disabled = false;
+      btn.classList.remove('opacity-80', 'cursor-not-allowed');
+      btnText.innerText = '確認資料並付款';
+      btnSubText.innerText = '(NT$ 3,000)';
+      spinner.classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
